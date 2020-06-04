@@ -1,0 +1,4 @@
+{
+  "domain": "example.local",
+  "container": "OU=MyOU,DC=corp,DC=example,DC=com"
+}

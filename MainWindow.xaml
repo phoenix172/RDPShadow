@@ -1,0 +1,45 @@
+﻿<Window x:Class="RDPShadow.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RDPShadow"
+        xmlns:utilities="clr-namespace:TinyMVVM.Utilities;assembly=TinyMVVM.Core"
+        xmlns:entities="clr-namespace:RDPShadow.Entities"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="400">
+    <Window.Resources>
+
+    </Window.Resources>
+    <utilities:ApexGrid Columns="*,*">
+        <ListBox ItemsSource="{Binding Computers}" IsSynchronizedWithCurrentItem="True">
+            <ListBox.Resources>
+                <Style TargetType="ListBoxItem">
+                    <EventSetter Event="MouseDoubleClick" Handler="ComputerItem_MouseDoubleClick"/>
+                </Style>
+            </ListBox.Resources>
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="entities:Computer">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <ListView ItemsSource="{Binding Sessions}" Grid.Column="1" 
+                  IsEnabled="{Binding EnableSessionSelect}" IsSynchronizedWithCurrentItem="True">
+            <ListView.Resources>
+                <Style TargetType="ListViewItem">
+                    <EventSetter Event="MouseDoubleClick" Handler="SessionItem_MouseDoubleClick"/>
+                </Style>
+            </ListView.Resources>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding SessionId}" Width="Auto"/>
+                    <GridViewColumn Header="UserName" DisplayMemberBinding="{Binding UserName}" Width="Auto"/>
+                    <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" Width="Auto"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </utilities:ApexGrid>
+</Window>
