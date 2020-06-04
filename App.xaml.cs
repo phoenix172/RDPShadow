@@ -28,7 +28,7 @@ namespace RDPShadow
 
             IConfiguration config = configBuilder
                 .AddJsonFile("appconfig.json")
-                .AddJsonFile("appconfig.Development.json")
+                .AddJsonFile("appconfig.Development.json", true)
                 .Build();
 
             string domain = config["domain"];
