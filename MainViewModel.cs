@@ -6,9 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Input;
 using RDPShadow.Entities;
 using RDPShadow.Services;
 using TinyMVVM;
+using TinyMVVM.Commands;
 
 namespace RDPShadow
 {
@@ -16,54 +18,29 @@ namespace RDPShadow
     {
         private ObservableCollection<Computer> _computersSource;
         private ObservableCollection<Session> _sessionsSource;
-        private readonly ComputerService _computerService;
-        private readonly SessionService _sessionService;
         private readonly RDPService _rdpService;
         private ICollectionView _sessions;
         private ICollectionView _computers;
         private bool _enableSessionSelect;
+        private Computer _selectedComputer;
+        private Session _selectedSession;
 
-        public MainViewModel(
-            ComputerService computerService,
-            SessionService sessionService,
-            RDPService rdpService)
+        public MainViewModel(RDPService rdpService)
         {
-            _computerService = computerService;
-            _sessionService = sessionService;
             _rdpService = rdpService;
+            ConnectCommand = new RelayCommand(Connect, CanConnect);
+            ShadowConnectCommand = new RelayCommand(ShadowConnect, CanShadowConnect);
 
             Load();
         }
 
-        public ICollectionView Computers
-        {
-            get => _computers;
-            private set
-            {
-                _computers = value;
-                OnPropertyChanged();
-            }
-        }
+        public MainModel Model { get; }  = new MainModel();
 
-        public ICollectionView Sessions
-        {
-            get => _sessions;
-            private set
-            {
-                _sessions = value;
-                OnPropertyChanged();
-            }
-        }
+        public ICommand ConnectCommand { get; }
 
-        public bool EnableSessionSelect
-        {
-            get => _enableSessionSelect;
-            set
-            {
-                _enableSessionSelect = value;
-                OnPropertyChanged();
-            }
-        }
+        public ICommand ShadowConnectCommand { get; }
+
+
 
         public void Load()
         {
@@ -72,34 +49,39 @@ namespace RDPShadow
 
         private async Task LoadSessionsAsync(Computer computer)
         {
-            var remoteSessions = await _sessionService.GetRemoteSessionsAsync(computer);
-            _sessionsSource = new ObservableCollection<Session>(remoteSessions);
-            EnableSessionSelect = _sessionsSource.Any();
-            Sessions = CollectionViewSource.GetDefaultView(_sessionsSource);
+            var remoteSessions = await _rdpService.GetRemoteSessionsAsync(computer);
+            Model.Sessions = new ObservableCollection<Session>(remoteSessions);
+            Model.EnableSessionSelect = Model.Sessions.Any();
         }
 
         private void LoadComputers()
         {
-            _computersSource = new ObservableCollection<Computer>(_computerService.Get());
-            Computers = CollectionViewSource.GetDefaultView(_computersSource);
-            Computers.SortDescriptions.Add(new SortDescription(nameof(Computer.DistinguishedName),
+            Model.Computers = new ObservableCollection<Computer>(_rdpService.GetComputers());
+            Model.ComputersView.SortDescriptions.Add(new SortDescription(nameof(Computer.DistinguishedName),
                 ListSortDirection.Ascending));
-            Computers.CurrentChanged += async (s, e)
-                => await LoadSessionsAsync(Computers.CurrentItem as Computer);
+            Model.ComputersView.CurrentChanged += async (s, e)
+                => await LoadSessionsAsync(Model.SelectedComputer);
         }
 
-        public void ShadowConnect()
+        private void ShadowConnect()
         {
-            var computer = Computers.CurrentItem as Computer;
-            var session = Sessions.CurrentItem as Session;
-            if (session == null) return;
-            _rdpService.ShadowConnect(computer, session);
+            _rdpService.ShadowConnect(Model.SelectedComputer, Model.SelectedSession);
         }
 
-        public void Connect()
+        private bool CanShadowConnect()
         {
-            var computer = Computers.CurrentItem as Computer;
-            _rdpService.Connect(computer);
+            return Model.SelectedComputer != null &&
+                   Model.SelectedSession != null;
+        }
+
+        private void Connect()
+        {
+            _rdpService.Connect(Model.SelectedComputer);
+        }
+
+        private bool CanConnect()
+        {
+            return Model.SelectedComputer != null;
         }
     }
 }

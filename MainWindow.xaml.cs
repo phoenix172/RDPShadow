@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using RDPShadow.Entities;
+using RDPShadow.Extensions;
 
 namespace RDPShadow
 {
@@ -21,21 +22,22 @@ namespace RDPShadow
     /// </summary>
     public partial class MainWindow : Window
     {
-        private MainViewModel _viewModel;
+        private readonly MainViewModel _viewModel;
         public MainWindow(MainViewModel viewModel)
         {
             InitializeComponent();
-            this.DataContext = _viewModel = viewModel;
+            _viewModel = viewModel;
+            this.DataContext = _viewModel;
         }
 
         private void SessionItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            _viewModel.ShadowConnect();
+            _viewModel.ShadowConnectCommand.Invoke();
         }
 
         private void ComputerItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            _viewModel.Connect();
+            _viewModel.ConnectCommand.Invoke();
         }
     }
 }

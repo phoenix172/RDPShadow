@@ -34,11 +34,11 @@ namespace RDPShadow
             string domain = config["domain"];
             string containerDc = config["containerDc"];
 
-            var computerService = new ComputerService(domain, containerDc);
-            var sessionService = new SessionService();
-            var rdpService = new RDPService();
+            var computerService = new ComputerRepository(domain, containerDc);
+            var sessionService = new SessionRepository();
+            var rdpService = new RDPService(computerService, sessionService);
 
-            return new MainViewModel(computerService, sessionService, rdpService);
+            return new MainViewModel(rdpService);
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
