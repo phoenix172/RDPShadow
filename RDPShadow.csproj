@@ -4,6 +4,8 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,13 +16,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="appconfig.Development.json">
+    <Content Include="appconfig.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <ExcludeFromSingleFile>True</ExcludeFromSingleFile>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="appconfig.Development.json">
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appconfig.Development.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="appconfig.json">
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appconfig.Development.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

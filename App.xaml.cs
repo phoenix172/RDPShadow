@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,6 +28,7 @@ namespace RDPShadow
             ConfigurationBuilder configBuilder = new ConfigurationBuilder();
 
             IConfiguration config = configBuilder
+                .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appconfig.json")
                 .AddJsonFile("appconfig.Development.json", true)
                 .Build();

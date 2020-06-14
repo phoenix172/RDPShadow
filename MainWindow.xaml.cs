@@ -30,6 +30,11 @@ namespace RDPShadow
             this.DataContext = _viewModel;
         }
 
+        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _viewModel.Load();
+        }
+
         private void SessionItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             _viewModel.ShadowConnectCommand.Invoke();
