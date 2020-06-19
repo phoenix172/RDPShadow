@@ -13,22 +13,23 @@
 
     </Window.Resources>
     <utilities:ApexGrid Columns="*,*">
-        <ListBox ItemsSource="{Binding Model.Computers}" IsSynchronizedWithCurrentItem="True">
+        <ListBox ItemsSource="{Binding Model.Computers}" IsSynchronizedWithCurrentItem="True" HorizontalContentAlignment="Stretch">
             <ListBox.Resources>
                 <Style TargetType="ListBoxItem">
                     <EventSetter Event="MouseDoubleClick" Handler="ComputerItem_MouseDoubleClick"/>
                 </Style>
             </ListBox.Resources>
             <ListBox.ItemTemplate>
-                <DataTemplate DataType="entities:Computer">
-                    <StackPanel Orientation="Horizontal">
+                <DataTemplate DataType="local:ComputerModel">
+                    <DockPanel>
+                        <Image Source="{Binding Status, Converter={local:LoadingStatusImageConverter}}" Width="16" Height="16" DockPanel.Dock="Right"/>
                         <TextBlock Text="{Binding Name}"/>
-                    </StackPanel>
+                    </DockPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
         <ListView ItemsSource="{Binding Model.Sessions}" Grid.Column="1"  
-                  IsEnabled="{Binding EnableSessionSelect}" IsSynchronizedWithCurrentItem="True">
+                  IsEnabled="{Binding Model.EnableSessionSelect, Mode=TwoWay}" IsSynchronizedWithCurrentItem="True">
             <ListView.Resources>
                 <Style TargetType="ListViewItem">
                     <EventSetter Event="MouseDoubleClick" Handler="SessionItem_MouseDoubleClick"/>

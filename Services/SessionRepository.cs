@@ -16,7 +16,7 @@ namespace RDPShadow.Services
     {
         private readonly int _queryTimeout;
 
-        public SessionRepository(int queryTimeout = 1000)
+        public SessionRepository(int queryTimeout = 2000)
         {
             _queryTimeout = queryTimeout;
         }

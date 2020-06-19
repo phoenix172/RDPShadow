@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\done.png" />
+    <None Remove="Images\failed.png" />
+    <None Remove="Images\loading.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Cassia.NetStandard" Version="1.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.4" />
     <PackageReference Include="System.DirectoryServices.AccountManagement" Version="4.7.0" />
@@ -21,6 +27,12 @@
       <ExcludeFromSingleFile>True</ExcludeFromSingleFile>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\done.png" />
+    <Resource Include="Images\failed.png" />
+    <Resource Include="Images\loading.png" />
   </ItemGroup>
 
   <ItemGroup>

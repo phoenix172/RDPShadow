@@ -18,14 +18,7 @@ namespace RDPShadow
 {
     public class MainViewModel : ObservableObject
     {
-        private ObservableCollection<Computer> _computersSource;
-        private ObservableCollection<Session> _sessionsSource;
         private readonly RDPService _rdpService;
-        private ICollectionView _sessions;
-        private ICollectionView _computers;
-        private bool _enableSessionSelect;
-        private Computer _selectedComputer;
-        private Session _selectedSession;
 
         public MainViewModel(RDPService rdpService)
         {
@@ -40,11 +33,25 @@ namespace RDPShadow
 
         public ICommand ShadowConnectCommand { get; }
 
-        private async Task LoadSessionsAsync(Computer computer)
+        private async Task LoadSessionsAsync()
         {
-            var remoteSessions = await _rdpService.GetRemoteSessionsAsync(computer);
+            Model.EnableSessionSelect = false;
+            Model.Sessions.Clear();
+
+            var queryComputer = Model.SelectedComputer;
+            var previousStatus = queryComputer.Status;
+            queryComputer.Status = LoadingStatus.Loading;
+            var remoteSessions = await _rdpService.GetRemoteSessionsAsync(queryComputer.Computer);
+            if (Model.SelectedComputer != queryComputer)
+            {
+                queryComputer.Status = previousStatus;
+                return;
+            }
+
             Model.Sessions = new ObservableCollection<Session>(remoteSessions);
-            Model.EnableSessionSelect = Model.Sessions.Any();
+            var hasSessions = Model.Sessions.Any();
+            Model.EnableSessionSelect = hasSessions;
+            queryComputer.Status = hasSessions ? LoadingStatus.Done : LoadingStatus.Failed;
         }
 
         public void Load()
@@ -65,16 +72,17 @@ namespace RDPShadow
                     MessageBox.Show("Error loading computers. Check configuration"));
             }
 
-            Model.Computers = new ObservableCollection<Computer>(computers);
-            Model.ComputersView.SortDescriptions.Add(new SortDescription(nameof(Computer.DistinguishedName),
+            Model.Computers = new ObservableCollection<ComputerModel>(computers
+                .Select(x=>new ComputerModel(x)));
+            Model.ComputersView.SortDescriptions.Add(new SortDescription(nameof(ComputerModel.DistinguishedName),
                 ListSortDirection.Ascending));
             Model.ComputersView.CurrentChanged += async (s, e)
-                => await LoadSessionsAsync(Model.SelectedComputer);
+                => await LoadSessionsAsync();
         }
 
         private void ShadowConnect()
         {
-            _rdpService.ShadowConnect(Model.SelectedComputer, Model.SelectedSession);
+            _rdpService.ShadowConnect(Model.SelectedComputer.Computer, Model.SelectedSession);
         }
 
         private bool CanShadowConnect()
@@ -85,7 +93,7 @@ namespace RDPShadow
 
         private void Connect()
         {
-            _rdpService.Connect(Model.SelectedComputer);
+            _rdpService.Connect(Model.SelectedComputer.Computer);
         }
 
         private bool CanConnect()

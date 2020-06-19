@@ -14,18 +14,18 @@ namespace RDPShadow
         private bool _enableSessionSelect;
 
         private ObservableCollection<Session> _sessions;
-        private ObservableCollection<Computer> _computers;
+        private ObservableCollection<ComputerModel> _computers;
 
         private ICollectionView _computersView;
         private ICollectionView _sessionsView;
 
         public MainModel()
         {
-            Computers = new ObservableCollection<Computer>();
+            Computers = new ObservableCollection<ComputerModel>();
             Sessions = new ObservableCollection<Session>();
         }
 
-        public Computer SelectedComputer => ComputersView.CurrentItem as Computer;
+        public ComputerModel SelectedComputer => ComputersView.CurrentItem as ComputerModel;
         public Session SelectedSession => SessionsView.CurrentItem as Session;
 
         public ICollectionView ComputersView
@@ -56,7 +56,7 @@ namespace RDPShadow
             }
         }
 
-        public ObservableCollection<Computer> Computers
+        public ObservableCollection<ComputerModel> Computers
         {
             get => _computers;
             set 
