@@ -18,11 +18,23 @@ namespace RDPShadow
 
         private ICollectionView _computersView;
         private ICollectionView _sessionsView;
+        private bool _allowControl;
 
         public MainModel()
         {
             Computers = new ObservableCollection<ComputerModel>();
             Sessions = new ObservableCollection<Session>();
+        }
+
+
+        public bool AllowControl
+        {
+            get => _allowControl;
+            set
+            {
+                _allowControl = value;
+                OnPropertyChanged();
+            }
         }
 
         public ComputerModel SelectedComputer => ComputersView.CurrentItem as ComputerModel;

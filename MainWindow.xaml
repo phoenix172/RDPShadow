@@ -8,40 +8,46 @@
         xmlns:entities="clr-namespace:RDPShadow.Entities"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="400"
-        Loaded="MainWindow_OnLoaded">
+        Loaded="MainWindow_OnLoaded"
+        d:DataContext="{d:DesignInstance local:MainViewModel}">
     <Window.Resources>
 
     </Window.Resources>
     <utilities:ApexGrid Columns="*,*">
-        <ListBox ItemsSource="{Binding Model.Computers}" IsSynchronizedWithCurrentItem="True" HorizontalContentAlignment="Stretch">
+        <ListBox ItemsSource="{Binding Model.Computers}" IsSynchronizedWithCurrentItem="True"
+                 HorizontalContentAlignment="Stretch">
             <ListBox.Resources>
                 <Style TargetType="ListBoxItem">
-                    <EventSetter Event="MouseDoubleClick" Handler="ComputerItem_MouseDoubleClick"/>
+                    <EventSetter Event="MouseDoubleClick" Handler="ComputerItem_MouseDoubleClick" />
                 </Style>
             </ListBox.Resources>
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="local:ComputerModel">
                     <DockPanel>
-                        <Image Source="{Binding Status, Converter={local:LoadingStatusImageConverter}}" Width="16" Height="16" DockPanel.Dock="Right"/>
-                        <TextBlock Text="{Binding Name}"/>
+                        <Image Source="{Binding Status, Converter={local:LoadingStatusImageConverter}}" Width="16"
+                               Height="16" DockPanel.Dock="Right" />
+                        <TextBlock Text="{Binding Name}" />
                     </DockPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <ListView ItemsSource="{Binding Model.Sessions}" Grid.Column="1"  
-                  IsEnabled="{Binding Model.EnableSessionSelect, Mode=TwoWay}" IsSynchronizedWithCurrentItem="True">
-            <ListView.Resources>
-                <Style TargetType="ListViewItem">
-                    <EventSetter Event="MouseDoubleClick" Handler="SessionItem_MouseDoubleClick"/>
-                </Style>
-            </ListView.Resources>
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding SessionId}" Width="Auto"/>
-                    <GridViewColumn Header="UserName" DisplayMemberBinding="{Binding UserName}" Width="Auto"/>
-                    <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" Width="Auto"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <StackPanel Orientation="Vertical" Grid.Column="1">
+            <CheckBox IsChecked="{Binding Model.AllowControl}">Allow Control</CheckBox>
+            <ListView ItemsSource="{Binding Model.Sessions}" 
+                      IsEnabled="{Binding Model.EnableSessionSelect, Mode=TwoWay}" IsSynchronizedWithCurrentItem="True">
+                <ListView.Resources>
+                    <Style TargetType="ListViewItem">
+                        <EventSetter Event="MouseDoubleClick" Handler="SessionItem_MouseDoubleClick" />
+                    </Style>
+                </ListView.Resources>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Id" DisplayMemberBinding="{Binding SessionId}" Width="Auto" />
+                        <GridViewColumn Header="UserName" DisplayMemberBinding="{Binding UserName}" Width="Auto" />
+                        <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" Width="Auto" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </StackPanel>
     </utilities:ApexGrid>
 </Window>

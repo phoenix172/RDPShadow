@@ -27,7 +27,7 @@ namespace RDPShadow
             ShadowConnectCommand = new RelayCommand(ShadowConnect, CanShadowConnect);
         }
 
-        public MainModel Model { get; }  = new MainModel();
+        public MainModel Model { get; } = new MainModel();
 
         public ICommand ConnectCommand { get; }
 
@@ -73,7 +73,7 @@ namespace RDPShadow
             }
 
             Model.Computers = new ObservableCollection<ComputerModel>(computers
-                .Select(x=>new ComputerModel(x)));
+                .Select(x => new ComputerModel(x)));
             Model.ComputersView.SortDescriptions.Add(new SortDescription(nameof(ComputerModel.DistinguishedName),
                 ListSortDirection.Ascending));
             Model.ComputersView.CurrentChanged += async (s, e)
@@ -82,7 +82,7 @@ namespace RDPShadow
 
         private void ShadowConnect()
         {
-            _rdpService.ShadowConnect(Model.SelectedComputer.Computer, Model.SelectedSession);
+            _rdpService.ShadowConnect(Model.SelectedComputer.Computer, Model.SelectedSession, Model.AllowControl);
         }
 
         private bool CanShadowConnect()

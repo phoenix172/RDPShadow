@@ -17,14 +17,14 @@ namespace RDPShadow.Services
             _sessionRepo = sessionRepo;
         }
 
-        public void ShadowConnect(Computer computer, Session session)
+        public void ShadowConnect(Computer computer, Session session, bool allowControl = false)
         {
             var proc = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "mstsc.exe",
-                    Arguments = $"/shadow:{session.SessionId} /v:{computer.Name} /control /noConsentPrompt",
+                    Arguments = $"/shadow:{session.SessionId} /v:{computer.Name} {(allowControl? "/control" : "")} /noConsentPrompt",
                 }
             };
             proc.Start();
