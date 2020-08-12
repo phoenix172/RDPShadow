@@ -42,7 +42,7 @@ namespace RDPShadow.Services
             };
             proc.Start();
         }
-
+        
         public async Task<IEnumerable<Session>> GetRemoteSessionsAsync(Computer computer) 
             => await _sessionRepo.GetRemoteSessionsAsync(computer);
 
