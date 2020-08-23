@@ -10,15 +10,20 @@ pool:
   name: 'Default'
 
 variables:
+  major: 1
+  minor: 7
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+
+name: $(major).$(minor).$(Month)$(DayOfMonth)$(Rev:.r)
 
 steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
     projects: '**/*.csproj'
+    versioningScheme: byBuildNumber
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(Pipeline.Workspace)'
