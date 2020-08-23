@@ -23,6 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TrimmerRootAssembly Include="Microsoft.Extensions.FileSystemGlobbing" />
+  </ItemGroup>
+    
+  <ItemGroup>
     <Content Include="appconfig.json">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <ExcludeFromSingleFile>True</ExcludeFromSingleFile>
